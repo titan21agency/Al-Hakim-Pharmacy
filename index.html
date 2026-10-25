@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Al Hakim Pharmacy</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Sans+Arabic:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a prescription that unfolds — hero capsule, then numbered "dose" sections on a navy chart-paper ground */
+:root{
+  --navy:#0f2347; --navy-2:#142c58; --navy-3:#1b3870;
+  --ink:#eef2fa; --muted:#93a6c8; --steel:#6aa5c8;
+  --gold:#ffd84f; --gold-soft:rgba(255,216,79,.14);
+  --mint:#5fe3c0; --coral:#ff6f61; --violet:#7a3fb0;
+  --line:rgba(147,166,200,.18);
+  --f-display:"Anton","Impact","Arial Narrow",sans-serif;
+  --f-body:"IBM Plex Sans Arabic","Segoe UI",Tahoma,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--navy);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.75;overflow-x:hidden;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:48px 48px;background-attachment:fixed}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--navy)}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+.en{font-family:var(--f-display);letter-spacing:.01em;font-weight:400}
+.mono{font-family:var(--f-mono)}
+h1,h2,h3{text-wrap:balance;margin:0}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:6px}
+
+/* progress + nav */
+.progress{position:fixed;top:env(safe-area-inset-top,0px);right:0;left:0;height:3px;z-index:70;background:transparent}
+.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--mint),var(--gold));transform-origin:right}
+nav.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:rgba(15,35,71,.82);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+nav.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:12px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand .rx{width:34px;height:34px;border-radius:10px;background:var(--gold);color:var(--navy);display:grid;place-items:center;font-family:var(--f-mono);font-weight:600;font-size:15px}
+.brand b{font-family:var(--f-display);font-weight:400;font-size:20px;letter-spacing:.02em}
+.links{display:flex;gap:4px;flex-wrap:wrap}
+.links a{text-decoration:none;font-size:14px;color:var(--muted);padding:6px 12px;border-radius:999px;transition:color .2s,background .2s}
+.links a:hover,.links a.on{color:var(--navy);background:var(--gold)}
+@media (max-width:860px){.links{display:none}}
+
+/* hero */
+.hero{padding-block:72px 64px;position:relative}
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center}
+.tag{display:inline-flex;gap:10px;align-items:center;font-family:var(--f-mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(255,216,79,.35);padding:6px 12px;border-radius:999px;direction:ltr}
+.tag .dot{width:7px;height:7px;border-radius:50%;background:var(--mint);box-shadow:0 0 0 0 var(--mint);animation:ping 2s infinite}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(95,227,192,.6)}100%{box-shadow:0 0 0 10px rgba(95,227,192,0)}}
+.hero h1{margin-top:22px;font-family:var(--f-display);font-weight:400;font-size:clamp(48px,8.5vw,112px);line-height:.95;direction:ltr;text-align:right;text-transform:uppercase}
+.hero h1 .l{display:block;overflow:hidden}
+.hero h1 .l span{display:inline-block;animation:rise .9s cubic-bezier(.2,.8,.2,1) both}
+.hero h1 .l:nth-child(2) span{animation-delay:.12s;color:var(--gold)}
+.hero h1 .l:nth-child(3) span{animation-delay:.24s;-webkit-text-stroke:1.5px var(--ink);color:transparent}
+@keyframes rise{from{transform:translateY(60%)}to{transform:none}}
+.hero p.lead{font-size:clamp(17px,2vw,20px);color:var(--muted);max-width:56ch;margin:22px 0 0}
+.hero p.lead strong{color:var(--ink);font-weight:500}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}
+.btn{font:inherit;font-weight:500;cursor:pointer;border:0;border-radius:14px;padding:13px 22px;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:transform .2s,box-shadow .2s,background .2s}
+.btn.primary{background:var(--gold);color:var(--navy);box-shadow:0 10px 30px -10px rgba(255,216,79,.6)}
+.btn.primary:hover{transform:translateY(-2px);box-shadow:0 16px 36px -10px rgba(255,216,79,.75)}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.ghost:hover{border-color:var(--gold);color:var(--gold)}
+
+/* capsule */
+.stage{position:relative;aspect-ratio:1/1;max-width:100%;display:grid;place-items:center}
+.orbit{position:absolute;inset:6%;border:1px dashed rgba(147,166,200,.3);border-radius:50%;animation:spin 40s linear infinite}
+.orbit.o2{inset:20%;animation-duration:28s;animation-direction:reverse;border-color:rgba(255,216,79,.25)}
+.orbit .sat{position:absolute;top:-7px;left:50%;width:14px;height:14px;border-radius:50%;background:var(--mint);box-shadow:0 0 18px var(--mint)}
+.orbit.o2 .sat{background:var(--gold);box-shadow:0 0 18px var(--gold);top:auto;bottom:-7px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.capsule{position:relative;width:44%;aspect-ratio:1/2.3;transform:rotate(-32deg);cursor:pointer;animation:float 6s ease-in-out infinite;filter:drop-shadow(0 30px 40px rgba(0,0,0,.45))}
+@keyframes float{50%{translate:0 -14px}}
+.half{position:absolute;left:0;right:0;height:50%;transition:transform .7s cubic-bezier(.3,1.4,.4,1)}
+.half.a{top:0;border-radius:999px 999px 10px 10px;background:linear-gradient(110deg,#ffe37a 0%,var(--gold) 45%,#d9a91d 100%)}
+.half.b{bottom:0;border-radius:10px 10px 999px 999px;background:linear-gradient(110deg,#f4f7ff 0%,#dbe3f3 50%,#a9b8d6 100%)}
+.half.a::after,.half.b::after{content:"";position:absolute;top:12%;left:18%;width:14%;height:60%;border-radius:999px;background:rgba(255,255,255,.55)}
+.half.a span{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--f-display);font-size:clamp(20px,3vw,34px);color:var(--navy);transform:rotate(90deg);letter-spacing:.05em}
+.capsule.open .half.a{transform:translateY(-22%)}
+.capsule.open .half.b{transform:translateY(22%)}
+.granules{position:absolute;inset:0;pointer-events:none}
+.granules i{position:absolute;left:50%;top:50%;width:9px;height:9px;border-radius:50%;opacity:0;transition:transform .9s cubic-bezier(.2,.8,.2,1),opacity .4s}
+.capsule.open + .granules i{opacity:1}
+.hint{position:absolute;bottom:2%;left:50%;translate:-50% 0;font-family:var(--f-mono);font-size:11px;color:var(--muted);letter-spacing:.1em;white-space:nowrap;direction:ltr}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:20px;overflow:hidden;margin-top:56px}
+.stat{background:var(--navy-2);padding:22px 20px}
+.stat .n{font-family:var(--f-display);font-size:clamp(34px,4.5vw,52px);line-height:1;color:var(--gold);direction:ltr;text-align:right;font-variant-numeric:tabular-nums}
+.stat .k{color:var(--muted);font-size:14px;margin-top:8px}
+
+/* marquee */
+.marquee{border-block:1px solid var(--line);background:var(--gold);color:var(--navy);overflow:hidden;padding-block:14px;direction:ltr}
+.marquee .track{display:flex;gap:40px;width:max-content;animation:mq 30s linear infinite}
+.marquee span{font-family:var(--f-display);font-size:24px;text-transform:uppercase;white-space:nowrap;display:flex;align-items:center;gap:40px}
+.marquee span::after{content:"✚";font-size:16px}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* sections */
+section.block{padding-block:96px 24px;scroll-margin-top:70px}
+.sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:40px}
+.sec-head .num{font-family:var(--f-mono);font-size:13px;color:var(--mint);letter-spacing:.1em;direction:ltr}
+.sec-head h2{font-family:var(--f-display);font-weight:400;font-size:clamp(40px,6vw,76px);line-height:1;text-transform:uppercase;direction:ltr;text-align:right;margin-top:6px}
+.sec-head p{max-width:46ch;color:var(--muted);margin:0}
+.reveal{transition:transform .9s cubic-bezier(.2,.8,.2,1),opacity .9s}
+.js .reveal.pre{transform:translateY(28px);opacity:.25}
+
+/* competitors */
+.comp-tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px}
+.comp-tabs button{font:inherit;cursor:pointer;background:var(--navy-2);color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:10px 18px;display:flex;gap:10px;align-items:center;transition:all .25s}
+.comp-tabs button .ix{font-family:var(--f-mono);font-size:12px;color:var(--steel)}
+.comp-tabs button[aria-selected="true"]{background:var(--ink);color:var(--navy);border-color:var(--ink)}
+.comp-tabs button[aria-selected="true"] .ix{color:var(--violet)}
+.comp-panel{display:grid;grid-template-columns:1fr 340px;gap:24px;background:var(--navy-2);border:1px solid var(--line);border-radius:24px;padding:32px;min-height:340px}
+.comp-panel > *{min-width:0}
+.comp-panel h3{font-size:clamp(26px,3vw,34px);font-weight:700}
+.comp-panel .sub{color:var(--steel);font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;direction:ltr;text-align:right}
+.finds{list-style:none;padding:0;margin:22px 0 0;display:grid;gap:12px}
+.finds li{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;padding:14px 16px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid var(--line);animation:slideIn .5s cubic-bezier(.2,.8,.2,1) both}
+.finds li:nth-child(2){animation-delay:.07s}.finds li:nth-child(3){animation-delay:.14s}.finds li:nth-child(4){animation-delay:.21s}
+@keyframes slideIn{from{transform:translateX(-16px);opacity:.3}}
+.finds .ch{font-family:var(--f-mono);font-size:11px;padding:3px 8px;border-radius:6px;background:var(--gold-soft);color:var(--gold);white-space:nowrap;direction:ltr}
+.finds .ch.weak{background:rgba(255,111,97,.14);color:var(--coral)}
+.finds .ch.ok{background:rgba(95,227,192,.14);color:var(--mint)}
+.verdict{display:flex;flex-direction:column;gap:16px;border-radius:18px;padding:22px;background:var(--navy);border:1px solid var(--line)}
+.verdict .lbl{font-family:var(--f-mono);font-size:11px;color:var(--muted);letter-spacing:.12em;direction:ltr;text-align:right}
+.meter{display:grid;gap:10px}
+.meter .row{display:grid;grid-template-columns:90px 1fr 44px;gap:10px;align-items:center;font-size:14px}
+.meter .bar{height:10px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden}
+.meter .bar i{display:block;height:100%;border-radius:99px;width:0;transition:width 1.1s cubic-bezier(.2,.8,.2,1)}
+.meter .v{font-family:var(--f-mono);font-size:13px;text-align:left;font-variant-numeric:tabular-nums}
+.gap{border-top:1px dashed var(--line);padding-top:14px}
+.gap b{color:var(--gold);font-weight:500}
+
+/* audience */
+.aud{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.tier{border-radius:22px;padding:26px;border:1px solid var(--line);background:var(--navy-2);position:relative;overflow:hidden}
+.tier.major{background:linear-gradient(160deg,var(--navy-3),var(--navy-2))}
+.tier .weight{font-family:var(--f-mono);font-size:12px;letter-spacing:.12em;direction:ltr;text-align:right}
+.tier.major .weight{color:var(--gold)} .tier.imp .weight{color:var(--mint)} .tier.minor .weight{color:var(--steel)}
+.tier h3{font-family:var(--f-display);font-weight:400;font-size:34px;text-transform:uppercase;direction:ltr;text-align:right;margin:6px 0 18px}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{font:inherit;cursor:pointer;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--ink);padding:9px 15px;border-radius:12px;display:flex;align-items:center;gap:8px;transition:all .25s}
+.chip:hover{border-color:var(--gold)}
+.chip[aria-pressed="true"]{background:var(--gold);color:var(--navy);border-color:var(--gold)}
+.chip .e{font-family:var(--f-mono);font-size:11px;opacity:.7;direction:ltr}
+.aud-detail{margin-top:20px;border-radius:22px;padding:24px 28px;background:var(--ink);color:var(--navy);display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center}
+.aud-detail .ico{width:62px;height:62px;border-radius:18px;background:var(--navy);color:var(--gold);display:grid;place-items:center;font-family:var(--f-display);font-size:26px}
+.aud-detail h4{margin:0;font-size:22px}
+.aud-detail p{margin:4px 0 0;color:#33456b}
+.aud-detail .links-to{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.aud-detail .links-to span{font-size:13px;background:var(--navy);color:var(--ink);padding:4px 10px;border-radius:8px}
+.fade{animation:fadeUp .45s ease both}
+@keyframes fadeUp{from{transform:translateY(10px);opacity:.2}}
+
+/* pillars */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:26px}
+.filters button{font:inherit;font-size:14px;cursor:pointer;padding:8px 16px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--muted);transition:all .2s}
+.filters button.on{background:var(--mint);color:var(--navy);border-color:var(--mint)}
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.pill{perspective:1000px;min-height:250px;cursor:pointer;transition:opacity .35s,transform .35s}
+.pill.dim{opacity:.18;transform:scale(.97);pointer-events:none}
+.pill-in{position:relative;height:100%;min-height:250px;transition:transform .7s cubic-bezier(.3,1.2,.4,1);transform-style:preserve-3d}
+.pill.flip .pill-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:22px;padding:24px;display:flex;flex-direction:column;border:1px solid var(--line);overflow:hidden}
+.face.front{background:var(--navy-2)}
+.face.back{background:var(--gold);color:var(--navy);transform:rotateY(180deg);border-color:var(--gold)}
+.face .top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.face .code{font-family:var(--f-mono);font-size:12px;color:var(--steel);direction:ltr}
+.face.back .code{color:var(--navy);opacity:.7}
+.face .type{font-size:12px;padding:3px 10px;border-radius:99px;background:rgba(95,227,192,.14);color:var(--mint)}
+.face h3{font-size:24px;font-weight:700;margin-top:auto;line-height:1.35}
+.face h3 .en{display:block;font-size:15px;color:var(--steel);letter-spacing:.06em;margin-bottom:6px;direction:ltr;text-align:right}
+.face .more{font-family:var(--f-mono);font-size:11px;color:var(--muted);margin-top:14px;direction:ltr;text-align:right}
+.face.back p{margin:12px 0 0;font-size:15px;line-height:1.7}
+.face.back ul{margin:10px 0 0;padding-inline-start:18px;font-size:15px}
+.pill:hover .face.front{border-color:rgba(255,216,79,.5)}
+.pill.feature{grid-column:span 2}
+
+/* series */
+.series{margin-top:28px;border-radius:26px;background:var(--navy-3);border:1px solid var(--line);padding:30px;display:grid;grid-template-columns:auto 1fr;gap:30px;align-items:center;overflow:hidden}
+.law{font-family:var(--f-body);font-weight:700;font-size:clamp(90px,14vw,160px);line-height:1;color:var(--gold);position:relative}
+.law::after{content:"؟";position:absolute;top:0;left:-34px;font-size:.45em;color:var(--mint);animation:bob 2.4s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-10px) rotate(-10deg)}}
+.series .scen{display:grid;gap:12px}
+.scen button{font:inherit;text-align:right;cursor:pointer;background:var(--navy-2);border:1px solid var(--line);color:var(--ink);border-radius:16px;padding:16px 20px;display:flex;justify-content:space-between;gap:12px;align-items:center;transition:all .25s}
+.scen button:hover{border-color:var(--gold)}
+.scen button .ep{font-family:var(--f-mono);font-size:12px;color:var(--gold);direction:ltr}
+.scen .ans{font-size:15px;color:var(--muted);padding:0 20px;max-height:0;overflow:hidden;transition:max-height .4s ease,padding .4s}
+.scen .ans.show{max-height:160px;padding:4px 20px 8px}
+
+/* tactics */
+.tactics{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.tac{display:grid;grid-template-columns:auto 1fr;gap:18px;padding:24px;border-radius:22px;background:var(--navy-2);border:1px solid var(--line);align-items:start}
+.tac .gauge{width:74px;height:74px;position:relative}
+.tac .gauge svg{width:100%;height:100%;transform:rotate(-90deg)}
+.tac .gauge circle{fill:none;stroke-width:7}
+.tac .gauge .bg{stroke:rgba(255,255,255,.08)}
+.tac .gauge .fg{stroke:var(--gold);stroke-linecap:round;stroke-dasharray:201;stroke-dashoffset:201;transition:stroke-dashoffset 1.4s cubic-bezier(.2,.8,.2,1)}
+.tac .gauge b{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--f-display);font-weight:400;font-size:20px;direction:ltr}
+.tac h3{font-size:20px;font-weight:700}
+.tac p{margin:6px 0 0;color:var(--muted);font-size:15px}
+.tac.wide{grid-column:span 2;background:linear-gradient(120deg,var(--navy-3),var(--navy-2))}
+.save{display:flex;gap:14px;flex-wrap:wrap;margin-top:14px;align-items:center}
+.price-tag{border-radius:14px;padding:12px 16px;border:1px solid var(--line);font-size:14px}
+.price-tag.bad{opacity:.55;text-decoration:line-through;text-decoration-color:var(--coral)}
+.price-tag.good{border-color:var(--gold);background:var(--gold-soft)}
+.price-tag strong{font-family:var(--f-display);font-weight:400;font-size:26px;display:block;color:var(--gold)}
+.price-tag.bad strong{color:var(--muted)}
+
+/* timeline */
+.timeline{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.timeline::before{content:"";position:absolute;top:31px;right:6%;left:6%;height:2px;background:repeating-linear-gradient(90deg,var(--gold) 0 10px,transparent 10px 18px)}
+.day{position:relative;text-align:center;padding-top:0}
+.day .pin{width:64px;height:64px;margin:0 auto;border-radius:50%;background:var(--navy);border:2px solid var(--gold);display:grid;place-items:center;font-family:var(--f-display);font-size:22px;color:var(--gold);position:relative;z-index:1;transition:all .3s}
+.day:hover .pin{background:var(--gold);color:var(--navy);transform:scale(1.08)}
+.day .d{font-family:var(--f-display);font-weight:400;font-size:30px;margin-top:16px;text-transform:uppercase;direction:ltr}
+.day .t{color:var(--muted);margin-top:4px}
+.day .card{margin-top:16px;border-radius:18px;padding:18px;background:var(--navy-2);border:1px solid var(--line)}
+
+footer{margin-top:110px;padding-block:60px 40px;border-top:1px solid var(--line);background:rgba(10,24,52,.7)}
+footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
+.titan{display:flex;align-items:center;gap:14px}
+.titan .ti{width:54px;height:54px;border-radius:50%;background:var(--violet);color:#f5efe5;display:grid;place-items:center;font-family:var(--f-body);font-weight:700;font-size:26px;direction:ltr}
+.thanks{font-family:var(--f-display);font-weight:400;font-size:clamp(40px,7vw,80px);font-style:italic;text-transform:uppercase;direction:ltr;line-height:1}
+
+@media (max-width:960px){
+  .hero-grid{grid-template-columns:1fr}
+  .stage{max-width:380px;margin:0 auto;width:100%}
+  .comp-panel{grid-template-columns:1fr}
+  .aud{grid-template-columns:1fr}
+  .pillars{grid-template-columns:1fr 1fr}
+  .pill.feature{grid-column:span 2}
+  .stats{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:640px){
+  .pillars{grid-template-columns:1fr}
+  .pill.feature{grid-column:auto}
+  .tactics{grid-template-columns:1fr}
+  .tac.wide{grid-column:auto}
+  .timeline{grid-template-columns:1fr;gap:28px}
+  .timeline::before{display:none}
+  .series{grid-template-columns:1fr;text-align:center}
+  .law::after{left:auto;right:-30px}
+  .comp-panel{padding:22px}
+  .aud-detail{grid-template-columns:1fr}
+  .hero{padding-block:44px 40px}
+  section.block{padding-block:72px 16px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head><body>
+
+<div class="progress" aria-hidden="true"><i id="prog"></i></div>
+
+<nav class="top">
+  <div class="wrap">
+    <a class="brand" href="#top"><span class="rx">Rx</span><b>AL HAKIM</b></a>
+    <div class="links" id="navlinks">
+      <a href="#competitors">المنافسين</a>
+      <a href="#audience">الجمهور</a>
+      <a href="#pillars">محاور المحتوى</a>
+      <a href="#tactics">التكتيكات</a>
+      <a href="#timeline">الخطوات الجاية</a>
+    </div>
+  </div>
+</nav>
+
+<main dir="rtl" lang="ar">
+<header class="hero wrap" id="top">
+  <div class="hero-grid">
+    <div>
+      <span class="tag"><span class="dot"></span>Titan Agency · 2026 · Content Plan</span>
+      <h1>
+        <span class="l"><span>Content</span></span>
+        <span class="l"><span>Direction</span></span>
+        <span class="l"><span>&amp; Plan</span></span>
+      </h1>
+      <p class="lead">خطة المحتوى الكاملة لـ <strong>صيدلية الحكيم</strong>: تحليل المنافسين، تقسيم الجمهور، محاور المحتوى، والتكتيكات اللي هتخلّي <strong>د. حكيم</strong> أقرب صيدلي للناس على السوشيال ميديا.</p>
+      <div class="cta">
+        <a class="btn primary" href="#pillars">شوف محاور المحتوى ←</a>
+        <a class="btn ghost" href="#competitors">ابدأ من تحليل المنافسين</a>
+      </div>
+    </div>
+    <div class="stage" aria-hidden="true">
+      <div class="orbit"><span class="sat"></span></div>
+      <div class="orbit o2"><span class="sat"></span></div>
+      <div class="capsule" id="capsule" title="اضغط لفتح الكبسولة">
+        <div class="half a"><span>HAKIM</span></div>
+        <div class="half b"></div>
+      </div>
+      <div class="granules" id="granules"></div>
+      <span class="hint">TAP THE CAPSULE</span>
+    </div>
+  </div>
+
+  <div class="stats reveal">
+    <div class="stat"><div class="n" data-count="3">0</div><div class="k">منافسين تم تحليلهم</div></div>
+    <div class="stat"><div class="n" data-count="5" data-pre="3–">0</div><div class="k">ريلز في الأسبوع</div></div>
+    <div class="stat"><div class="n" data-count="5" data-pre="4–">0</div><div class="k">ستوريز في اليوم</div></div>
+    <div class="stat"><div class="n" data-count="9">0</div><div class="k">شرائح جمهور مستهدفة</div></div>
+  </div>
+</header>
+
+<div class="marquee" aria-hidden="true">
+  <div class="track" id="mq">
+    <span>روتينك مع حكيمك</span><span>Educational Carousels</span><span>Strong Hooks</span><span>Series "لو"</span><span>Dr. Hakim · The Older Brother</span><span>Save Amount › Percent</span><span>Strong Community</span>
+  </div>
+</div>
+
+<!-- COMPETITORS -->
+<section class="block wrap" id="competitors">
+  <div class="sec-head reveal">
+    <div><div class="num">// 01 — MARKET SCAN</div><h2>Competitors Analysis</h2></div>
+    <p>بصّينا على تلات صيدليات في نفس السوق. كل واحدة عندها نقطة قوة وفجوة واضحة، والفجوات دي هي مساحتنا.</p>
+  </div>
+  <div class="comp-tabs" role="tablist" id="compTabs"></div>
+  <div class="comp-panel reveal" id="compPanel" role="tabpanel"></div>
+</section>
+
+<!-- AUDIENCE -->
+<section class="block wrap" id="audience">
+  <div class="sec-head reveal">
+    <div><div class="num">// 02 — WHO WE TALK TO</div><h2>Audience Segmentation</h2></div>
+    <p>اختار أي شريحة عشان تشوف إزاي هنكلمها وأنهي محور محتوى معمول لها.</p>
+  </div>
+  <div class="aud reveal">
+    <div class="tier major">
+      <div class="weight">MAJOR SEGMENT</div><h3>Major</h3>
+      <div class="chips" data-tier="major"></div>
+    </div>
+    <div class="tier imp">
+      <div class="weight">IMPORTANT CONTENT</div><h3>Important</h3>
+      <div class="chips" data-tier="imp"></div>
+    </div>
+    <div class="tier minor">
+      <div class="weight">MINOR CONTENT</div><h3>Minor</h3>
+      <div class="chips" data-tier="minor"></div>
+    </div>
+  </div>
+  <div class="aud-detail" id="audDetail" aria-live="polite"></div>
+</section>
+
+<!-- PILLARS -->
+<section class="block wrap" id="pillars">
+  <div class="sec-head reveal">
+    <div><div class="num">// 03 — WHAT WE POST</div><h2>Content Pillars</h2></div>
+    <p>كل كارت محور محتوى. اضغط عليه عشان يتقلب ويوريك التفاصيل، أو فلتر حسب الهدف.</p>
+  </div>
+  <div class="filters" id="filters">
+    <button class="on" data-f="all">الكل</button>
+    <button data-f="edu">توعية وتثقيف</button>
+    <button data-f="seg">شرائح محددة</button>
+    <button data-f="brand">براند وكوميونتي</button>
+  </div>
+  <div class="pillars" id="pillarGrid"></div>
+
+  <div class="series reveal">
+    <div class="law" aria-hidden="true">لو</div>
+    <div>
+      <div class="num mono" style="color:var(--mint);font-size:13px;direction:ltr;text-align:right">SERIES · "لو"</div>
+      <h3 style="font-size:28px;margin:6px 0 16px">سلسلة "لو…" — سؤال الناس بتتكسف تسأله</h3>
+      <div class="scen" id="series"></div>
+    </div>
+  </div>
+</section>
+
+<!-- TACTICS -->
+<section class="block wrap" id="tactics">
+  <div class="sec-head reveal">
+    <div><div class="num">// 04 — HOW WE WIN</div><h2>Important Tactics</h2></div>
+    <p>القواعد اللي هنمشي عليها في كل بوست وريل وستوري.</p>
+  </div>
+  <div class="tactics">
+    <div class="tac reveal">
+      <div class="gauge"><svg viewBox="0 0 74 74"><circle class="bg" cx="37" cy="37" r="32"/><circle class="fg" cx="37" cy="37" r="32" data-p="1"/></svg><b>3s</b></div>
+      <div><h3>هوك قوي لكل ريل</h3><p>أول تلات ثواني هما اللي بيقرروا الريل هيتشاف ولا لأ. كل ريل لازم يبدأ بسؤال أو موقف أو جملة توقّف السكرول.</p></div>
+    </div>
+    <div class="tac reveal">
+      <div class="gauge"><svg viewBox="0 0 74 74"><circle class="bg" cx="37" cy="37" r="32"/><circle class="fg" cx="37" cy="37" r="32" data-p=".71"/></svg><b>3–5</b></div>
+      <div><h3>ريلز أسبوعيًا</h3><p>من 3 لـ 5 ريلز في الأسبوع بانتظام، بدل ريلز كتير من غير خطة زي المنافسين.</p></div>
+    </div>
+    <div class="tac reveal">
+      <div class="gauge"><svg viewBox="0 0 74 74"><circle class="bg" cx="37" cy="37" r="32"/><circle class="fg" cx="37" cy="37" r="32" data-p=".9"/></svg><b>4–5</b></div>
+      <div><h3>ستوريز يوميًا باستراتيجية</h3><p>4 لـ 5 ستوريز كل يوم بخطة واضحة: عروض، أسئلة، كواليس، وتذكير بالطلب.</p></div>
+    </div>
+    <div class="tac reveal">
+      <div class="gauge"><svg viewBox="0 0 74 74"><circle class="bg" cx="37" cy="37" r="32"/><circle class="fg" cx="37" cy="37" r="32" data-p=".8"/></svg><b>↑</b></div>
+      <div><h3>أوردرات أكتر وكوميونتي قوي</h3><p>الهدف مش الريتش بس. كل محتوى بيخدم يا إما زيادة الطلبات يا إما بناء علاقة مع الناس.</p></div>
+    </div>
+    <div class="tac wide reveal">
+      <div class="gauge"><svg viewBox="0 0 74 74"><circle class="bg" cx="37" cy="37" r="32"/><circle class="fg" cx="37" cy="37" r="32" data-p="1"/></svg><b>EGP</b></div>
+      <div>
+        <h3>في العروض: اتكلم بالمبلغ اللي هيتوفر، مش بالنسبة</h3>
+        <p>الرقم بالجنيه أوضح وأقوى من النسبة المئوية. مثال توضيحي:</p>
+        <div class="save">
+          <div class="price-tag bad"><strong>خصم 20%</strong>صعب يتحسب في ثانية</div>
+          <div class="price-tag good"><strong>وفّر 150 جنيه</strong>واضح وبيتحس فورًا</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section class="block wrap" id="timeline">
+  <div class="sec-head reveal">
+    <div><div class="num">// 05 — NEXT STEPS</div><h2>This Week</h2></div>
+    <p>تلات خطوات وهنبدأ التصوير.</p>
+  </div>
+  <div class="timeline reveal">
+    <div class="day"><div class="pin">FRI</div><div class="d">Friday</div><div class="card">تسليم الكونتنت</div></div>
+    <div class="day"><div class="pin">SAT</div><div class="d">Saturday</div><div class="card">ميتنج مع د. حكيم</div></div>
+    <div class="day"><div class="pin">SUN</div><div class="d">Sunday</div><div class="card">نقدر نبدأ التصوير</div></div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="titan"><div class="ti">ti</div><div><b style="font-size:18px">Titan Agency</b><div class="mono" style="color:var(--muted);font-size:12px">AL HAKIM PHARMACY · 2026</div></div></div>
+    <div class="thanks">Thank you</div>
+  </div>
+</footer>
+
+<script>
+document.documentElement.classList.add('js');
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* marquee duplicate */
+const mq=$('#mq'); mq.innerHTML+=mq.innerHTML;
+
+/* progress + active nav */
+const prog=$('#prog'), secs=['competitors','audience','pillars','tactics','timeline'];
+function onScroll(){
+  const h=document.documentElement; const p=h.scrollTop/(h.scrollHeight-h.clientHeight||1);
+  prog.style.width=(p*100)+'%';
+  let cur=''; secs.forEach(id=>{const el=document.getElementById(id); if(el.getBoundingClientRect().top<160) cur=id;});
+  $$('#navlinks a').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+cur));
+}
+addEventListener('scroll',onScroll,{passive:true}); onScroll();
+
+/* capsule */
+const cap=$('#capsule'), gr=$('#granules');
+const colors=['var(--gold)','var(--mint)','#ffffff','var(--coral)','var(--steel)'];
+for(let i=0;i<26;i++){const d=document.createElement('i');d.style.background=colors[i%colors.length];gr.appendChild(d);}
+cap.addEventListener('click',()=>{
+  const open=cap.classList.toggle('open');
+  [...gr.children].forEach((d,i)=>{
+    if(open){const a=Math.random()*Math.PI*2, r=90+Math.random()*120;
+      d.style.transform=`translate(${Math.cos(a)*r}px,${Math.sin(a)*r}px) scale(${.6+Math.random()})`;
+      d.style.transitionDelay=(i*12)+'ms';}
+    else{d.style.transform='translate(-50%,-50%) scale(.2)';d.style.transitionDelay='0ms';}
+  });
+});
+
+/* counters */
+function countUp(el){
+  const t=+el.dataset.count, pre=el.dataset.pre||''; if(reduce){el.textContent=pre+t;return;}
+  let s=null; const step=ts=>{s=s||ts; const k=Math.min((ts-s)/1100,1); el.textContent=pre+Math.round(t*(1-Math.pow(1-k,3))); if(k<1)requestAnimationFrame(step);};
+  requestAnimationFrame(step);
+}
+
+/* reveal observer (elements stay readable before JS runs) */
+const io=new IntersectionObserver(es=>es.forEach(e=>{
+  if(!e.isIntersecting) return; const el=e.target; el.classList.remove('pre');
+  el.querySelectorAll('[data-count]').forEach(countUp);
+  el.querySelectorAll('.fg').forEach(c=>c.style.strokeDashoffset=201*(1-(+c.dataset.p)));
+  el.querySelectorAll('.bar i').forEach(b=>b.style.width=b.dataset.w);
+  io.unobserve(el);
+}),{threshold:.15});
+function watch(el){ if(el.getBoundingClientRect().top>innerHeight) el.classList.add('pre'); io.observe(el); }
+
+/* competitors */
+const comps=[
+ {name:'صيدلية آل عبد اللطيف',en:'AL ABD ELLATIF PHARMACY',finds:[
+   ['Facebook','ok','الديزاين بيركّز على المنتج والمشكلة وإزاي بنحلها.'],
+   ['Facebook','ok','كاروسيل منتجات مرفق معاه السعر.'],
+   ['Reels','weak','بنت بتتكلم من غير كونتنت حقيقي ولا خطة واضحة.'],
+   ['Instagram','weak','نفس المشكلة، مفيش إضافة حقيقية.']],
+  meter:[['Product',70,'var(--gold)'],['Planning',25,'var(--coral)']],meterNote:'تقدير بصري للقوة النسبية',
+  gap:'ريلز بخطة وبشخصية حقيقية، مش مجرد كلام قدام الكاميرا.'},
+ {name:'صيدلية الطرشوبي',en:'EL TARSHOUBY PHARMACY · 16130',finds:[
+   ['70%','ok','من المحتوى بيعات مباشرة بعروض على منتجات العناية بالبشرة.'],
+   ['Bundles','ok','باقات شامبو + سيروم.'],
+   ['25%','ok','محتوى توعوي جاب ريتش أورجانيك كويس (رمضان، صحة القلب، سرطان البروستاتا).'],
+   ['Seasonal','ok','محتوى موسمي مرتبط بالمناسبات.']],
+  meter:[['Sales',70,'var(--gold)'],['Awareness',25,'var(--mint)']],meterNote:'نسب المحتوى من التحليل',
+  gap:'التوعية هي اللي جابت ريتش أورجانيك، وهي لسه ربع المحتوى بس عندهم. إحنا هنخليها في القلب.'},
+ {name:'صيدلية عماشة',en:'AMASHA PHARMACY · DR. AHMED SAFWAT',finds:[
+   ['AI','weak','أغلب المحتوى معمول بالذكاء الاصطناعي.'],
+   ['Brand','weak','مفيش اتساق في البراندنج على السوشيال.'],
+   ['Human','weak','مفيش محتوى قايم على أشخاص حقيقيين.'],
+   ['Reels','weak','ريتش ضعيف جدًا على الريلز.']],
+  meter:[['Human',10,'var(--coral)'],['Reach',15,'var(--coral)']],meterNote:'تقدير بصري للقوة النسبية',
+  gap:'وش حقيقي (د. حكيم) + هوية بصرية ثابتة = اللي ناقصهم بالظبط.'}
+];
+const tabs=$('#compTabs'), panel=$('#compPanel');
+comps.forEach((c,i)=>{
+  const b=document.createElement('button'); b.role='tab'; b.id='comp-'+i;
+  b.innerHTML=`<span class="ix">0${i+1}</span>${c.name}`;
+  b.onclick=()=>showComp(i); tabs.appendChild(b);
+});
+function showComp(i){
+  const c=comps[i];
+  $$('#compTabs button').forEach((b,j)=>b.setAttribute('aria-selected',i===j));
+  panel.innerHTML=`<div><div class="sub">${c.en}</div><h3>${c.name}</h3>
+    <ul class="finds">${c.finds.map(f=>`<li><span class="ch ${f[1]}">${f[0]}</span><span>${f[2]}</span></li>`).join('')}</ul></div>
+    <aside class="verdict"><div class="lbl">SNAPSHOT</div>
+      <div class="meter">${c.meter.map(m=>`<div class="row"><span class="mono" style="font-size:12px;direction:ltr">${m[0]}</span><div class="bar"><i style="background:${m[2]}" data-w="${m[1]}%"></i></div><span class="v">${m[1]}%</span></div>`).join('')}</div>
+      <div style="font-size:12px;color:var(--muted)">${c.meterNote}</div>
+      <div class="gap"><b>الفرصة لينا:</b> ${c.gap}</div></aside>`;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>panel.querySelectorAll('.bar i').forEach(b=>b.style.width=b.dataset.w)));
+}
+showComp(0);
+
+/* audience */
+const aud={
+ major:[['families','Families','العائلات','الابن اللي بيزور والدته، الأم اللي بتدوّر على علاج آمن لعيالها. محتوى دافي وعملي.',['Content for families','روتينك مع حكيمك']],
+        ['students','Students','الطلاب','د. حكيم هيبقى الأخ الكبير للطلبة: مشاكل الجامعة الصحية المتكررة من غير تعقيد.',['المحتوى التثقيفي','Dr. Hakim as older brother']],
+        ['gym','Gym Focused','جمهور الجيم','مزيلات العرق والمكملات، بلغة الجيم ومن غير مبالغة.',['Gym Content']]],
+ imp:[['seasonal','Seasonal','المحتوى الموسمي','رمضان والجوامع والأيام العالمية للصحة (WHDs). أكتر محتوى بيجيب ريتش أورجانيك.',['Content for the Mosque','WHDs']],
+      ['medical','Medical Centers','المراكز الطبية','شراكات ومحتوى موجه للمراكز الطبية القريبة.',['Content for medical centers']],
+      ['work','Workspaces','مساحات العمل','طلبات آخر الليل للي قاعدين يذاكروا أو يشتغلوا.',['طلبات آخر الليل']]],
+ minor:[['cafes','Cafes','الكافيهات','محتوى خفيف ومناسب لجمهور الكافيهات.',['Content for cafes']],
+        ['ahawy','Ahawy','القهاوي','لغة الشارع وروح القهوة البلدي.',['Content for القهاوي']],
+        ['genz','Gen Z','جيل Z','ترندات وهوكات سريعة بلغتهم.',['Strong hooks','Series "لو"']]]
+};
+const det=$('#audDetail'); let audFirst=true;
+Object.entries(aud).forEach(([tier,list])=>{
+  const box=document.querySelector(`.chips[data-tier="${tier}"]`);
+  list.forEach(a=>{
+    const b=document.createElement('button'); b.className='chip'; b.setAttribute('aria-pressed','false');
+    b.innerHTML=`${a[2]} <span class="e">${a[1]}</span>`;
+    b.onclick=()=>{ $$('.chip').forEach(c=>c.setAttribute('aria-pressed','false')); b.setAttribute('aria-pressed','true');
+      det.classList.remove('fade'); void det.offsetWidth; det.classList.add('fade');
+      det.innerHTML=`<div class="ico">${a[1].slice(0,2).toUpperCase()}</div><div><h4>${a[2]} <span class="mono" style="font-size:13px;opacity:.6">· ${a[1]}</span></h4><p>${a[3]}</p><div class="links-to">${a[4].map(x=>`<span>${x}</span>`).join('')}</div></div>`;};
+    box.appendChild(b);
+    if(audFirst){audFirst=false; b.click();}
+  });
+});
+
+/* pillars */
+const pillars=[
+ {f:'brand',feat:true,code:'P-01',type:'سلسلة ثابتة',en:'SIGNATURE SERIES',t:'روتينك مع حكيمك',back:'سلسلة ثابتة بيقدّم فيها د. حكيم روتين عملي لمشكلة معينة: بشرة، شعر، مذاكرة، رمضان. هي الوش الأساسي للبراند.'},
+ {f:'edu',code:'P-02',type:'توعية',en:'EDUCATIONAL CAROUSELS',t:'كاروسيل تثقيفي',back:'كاروسيلات بتشرح معلومة طبية خطوة بخطوة، سهلة الحفظ والمشاركة.'},
+ {f:'brand',code:'P-03',type:'ستايل',en:'LOW-DETAIL DESIGNS',t:'ديزاينات بسيطة وقليلة التفاصيل',back:'هوية بصرية نضيفة وثابتة، عكس الزحمة اللي عند المنافسين. رسالة واحدة في كل بوست.'},
+ {f:'edu',code:'P-04',type:'توعية + CTA',en:'AWARENESS WITH CTA',t:'لو مش بيع، يبقى توعية بـ CTA',back:'أي بوست مش بيعي لازم يختم بدعوة واضحة: <b>"ابعتها لحد"</b> محتاج يعرف المعلومة دي.'},
+ {f:'edu',code:'P-05',type:'توعية',en:'DRUG INTERACTIONS',t:'أدوية اوعى تاخدها مع بعض',back:'محتوى عن التداخلات الدوائية الشائعة. بيبني ثقة إن الصيدلية فاهمة مش بس بتبيع.'},
+ {f:'edu',code:'P-06',type:'توعية',en:'PRESCRIPTION DRUGS',t:'محتوى عن أدوية الروشتات',back:'شرح الأدوية اللي بتتكتب كتير في الروشتات: بتتاخد إزاي وإمتى.'},
+ {f:'edu',code:'P-07',type:'استشارة',en:'COUNSELING CONTENT',t:'محتوى استشاري',back:'الصيدلي كمستشار: أسئلة الناس الحقيقية وإجاباتها بصوت د. حكيم.'},
+ {f:'edu',feat:true,code:'P-08',type:'تثقيف',en:'HEALTH EDUCATION',t:'محتوى تثقيفي',back:'<ul><li>مشاكل وأمراض بتقابل طلاب الجامعة بشكل دوري.</li><li>مشاكل عامة مرتبطة بالأمراض زي السرطان بأنواعه.</li><li>الأيام العالمية للصحة (WHDs).</li></ul>'},
+ {f:'seg',code:'P-09',type:'شريحة',en:'GYM CONTENT',t:'محتوى الجيم',back:'<ul><li>مزيلات العرق (Deodorants).</li><li>المكملات الغذائية (Supplements).</li></ul>'},
+ {f:'seg',code:'P-10',type:'شريحة',en:'PLACES WE SERVE',t:'محتوى لأماكن بعينها',back:'<ul><li>Workspaces: طلبات آخر الليل.</li><li>المراكز الطبية.</li><li>الكافيهات.</li><li>القهاوي.</li></ul>'},
+ {f:'seg',code:'P-11',type:'موسمي',en:'MOSQUE CONTENT',t:'محتوى للجوامع',back:'محتوى موجه لرواد الجوامع، خصوصًا في رمضان.'},
+ {f:'brand',code:'P-12',type:'شخصية',en:'THE OLDER BROTHER',t:'د. حكيم الأخ الكبير للطلبة',back:'د. حكيم مش مجرد صيدلي؛ هو الأخ الكبير اللي الطالب يسأله من غير كسوف.'},
+ {f:'seg',code:'P-13',type:'عائلات',en:'FAMILY CONTENT',t:'الابن اللي بيزور والدته',back:'محتوى إنساني للعائلات: الابن اللي بيعدّي على الصيدلية في طريقه لزيارة والدته.'}
+];
+const grid=$('#pillarGrid');
+pillars.forEach(p=>{
+  const d=document.createElement('div'); d.className='pill reveal'+(p.feat?' feature':''); d.dataset.f=p.f; d.tabIndex=0; d.setAttribute('role','button');
+  d.setAttribute('aria-label',p.t);
+  d.innerHTML=`<div class="pill-in"><div class="face front"><div class="top"><span class="code">${p.code}</span><span class="type">${p.type}</span></div>
+    <h3><span class="en">${p.en}</span>${p.t}</h3><div class="more">TAP TO FLIP ↻</div></div>
+    <div class="face back"><div class="top"><span class="code">${p.code} · ${p.en}</span></div><h3 style="margin-top:8px;font-size:21px">${p.t}</h3><div style="font-size:15px">${p.back.startsWith('<')?p.back:'<p>'+p.back+'</p>'}</div></div></div>`;
+  const flip=()=>d.classList.toggle('flip');
+  d.onclick=flip; d.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();flip();}};
+  grid.appendChild(d);
+});
+$$('#filters button').forEach(b=>b.onclick=()=>{
+  $$('#filters button').forEach(x=>x.classList.toggle('on',x===b));
+  const f=b.dataset.f; $$('.pill').forEach(p=>p.classList.toggle('dim',f!=='all'&&p.dataset.f!==f));
+});
+
+/* series */
+const series=[
+ ['EP.01','لو بتاخدي حبوب منع الحمل…','محتوى خاص بأدوية منع الحمل: إيه اللي ممكن يقلل مفعولها، ولو نسيتي جرعة تعملي إيه.'],
+ ['EP.02','لو بتاخد أدوية السكر…','محتوى خاص بأدوية السكر: مواعيدها، علاقتها بالأكل، والتصرف الصح في المواقف الطارئة.']
+];
+const sw=$('#series');
+series.forEach((s,i)=>{
+  const b=document.createElement('button'); b.setAttribute('aria-expanded','false'); b.id='ep'+i;
+  b.innerHTML=`<span>${s[1]}</span><span class="ep">${s[0]} +</span>`;
+  const a=document.createElement('div'); a.className='ans'; a.textContent=s[2];
+  b.onclick=()=>{const o=a.classList.toggle('show'); b.setAttribute('aria-expanded',o); b.querySelector('.ep').textContent=s[0]+(o?' −':' +');};
+  sw.append(b,a);
+});
+
+$$('.reveal').forEach(watch);
+</script>
+</body></html>
